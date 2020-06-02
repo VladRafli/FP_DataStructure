@@ -31,13 +31,49 @@ extern "C" {
 
 //Manual Debuging
 // #define DEBUG
+//Data Size Limit
+#define DATASIZ 100
 
 /*--------------------
- * Structure
+ * Typedef and Global Variables
  ---------------------*/
 
-struct Data{
+ //Typedef Struct Graph Structure
+typedef struct Graph_Structure graph;
+//Typedef of Struct Customer_Data
+typedef struct Customer_Data node;
+//Typedef of Struct Date Of Birth
+typedef struct Date_Of_Birth dob;
+//Typedef of Struct Input_Data
+typedef struct Input_Data input;
+//
+graph *graphData[10];
 
+/*--------------------
+ * Data Structure
+ ---------------------*/
+struct Graph_Structure{
+    node *heads;
+};
+struct Customer_Data{
+    char fname[DATASIZ];
+    char lname[DATASIZ];
+    dob dob;
+    char username[DATASIZ];
+    char password[DATASIZ];
+    node *next;
+};
+struct Date_Of_Birth{
+    int date;
+    int month;
+    int year;
+};
+struct Input_Data{
+    char fname[DATASIZ];
+    char lname[DATASIZ];
+    dob dob;
+    char username[DATASIZ];
+    char password[DATASIZ];
 };
 
 /*---------------------
@@ -47,6 +83,9 @@ struct Data{
 void store_data();
 void edit_data();
 void delete_data();
+void input_data(input *varIpt);
+void createNode(input *inputedData, node *temp);
+void connectNode(node *temp);
 
 /*---------------------
  * Functions
@@ -91,10 +130,12 @@ int main(int argc, char const *argv[]){
     } while (1);
 }
 void store_data(){
+    input input;
+    node *temp;
     clrscr;
-    //input();
-    //createGraph();
-    //connectGraph();
+    input_data(&input);
+    createNode(&input, temp);
+    connectNode(temp);
     //printGraph();
     clrscr;
 }
@@ -108,7 +149,32 @@ void delete_data(){
     //search();
     clrscr;
 }
-
+void input_data(input *varIpt){
+    //Input User Data here!
+    do{
+        gets(varIpt->fname);
+    } while (strlen(varIpt->fname) < 1 || strlen(varIpt->fname) > DATASIZ);
+    //etc...
+}
+void createNode(input *inputedData, node *temp){
+    temp = (node *) malloc(sizeof(node));
+    strcpy(temp->fname, inputedData->fname);
+    strcpy(temp->lname, inputedData->lname);
+    strcpy(temp->dob.date, inputedData->dob.date);
+    strcpy(temp->dob.month, inputedData->dob.month);
+    strcpy(temp->dob.year, inputedData->dob.year);
+    strcpy(temp->username, inputedData->username);
+    strcpy(temp->password, inputedData->password);
+    temp->next = NULL;
+}
+void connectNode(node *temp){
+    int index = (int) temp->username % 10;
+    #ifdef DEBUG
+    printf("Index: %d", index);
+    #endif
+    //This part is not done!
+    graphData[index]->heads = temp;
+}
 /* --- If C++ --- */
 #ifdef __cplusplus
 }
